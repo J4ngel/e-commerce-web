@@ -1,6 +1,5 @@
-// src/components/Auth/Signup.js
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 function Signup({ adminReg = false }) {
     const [name, setName] = useState('')
@@ -48,7 +47,7 @@ function Signup({ adminReg = false }) {
                         <label className="form-check-label" for="exampleCheck1">Admin</label>
                     </div> : null}
                 <button type="submit" className="btn btn-primary">Registrarse!</button>
-                <a href='/' className="form-text">Volver</a>
+                <Link to='/' className="form-text">Volver</Link>
             </form>
         </div>
     );

@@ -1,54 +1,13 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+// import { tempProducts } from '../../temp/data';
 
 function Home() {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-    const products = [{
-        description: 'Bebida gaseosa',
-        id: '1A',
-        img: 'https://th.bing.com/th/id/OIP.H8YnfKuXmxe_Iyv6sqsiagHaHa?pid=ImgDet&rs=1',
-        name: 'Coca-Cola 1.5L',
-        price: 5000,
-        quantity: 10
-    }, {
-        description: 'Gomas dulces en forma de osos',
-        id: '2A',
-        img: 'https://th.bing.com/th/id/R.6d2843568efb7668050a610975626b5a?rik=ovXfYIZJ%2fcvMYQ&pid=ImgRaw&r=0',
-        name: 'Gomitas trululu',
-        price: 2500,
-        quantity: 15
-    }, {
-        description: 'Papas sabor natural',
-        id: '3A',
-        img: 'https://th.bing.com/th/id/OIP.MVX4VP6IIgA4_JjtXNK5TgHaHa?pid=ImgDet&rs=1',
-        name: 'Papas Natural margarita',
-        price: 1750,
-        quantity: 21
-    }, {
-        description: 'Helado con juguete',
-        id: '4A',
-        img: 'https://www.elespectador.com/resizer/k2arm1QdXG9vFE3rSGYnC-DJsqs=/657x0/filters:format(jpeg)/cloudfront-us-east-1.images.arcpublishing.com/elespectador/X67QZQG7OVEWLKBMYK2QOD7VII.jpg',
-        name: 'Paleta dracula',
-        price: 3750,
-        quantity: 25
-    }, {
-        description: 'Yogurt alpina de mora',
-        id: '5A',
-        img: 'https://jumbocolombiafood.vteximg.com.br/arquivos/ids/1448110-750-750/7702001044160-1.jpg?v=636494647014070000',
-        name: 'Yogurt de mora',
-        price: 3750,
-        quantity: 25
-    },{
-        description: 'Yogurt Colanta de mora',
-        id: '6A',
-        img: 'https://th.bing.com/th/id/OIP.qEc8I_nXzxdqLOHQW7qRLAHaHa?pid=ImgDet&rs=1',
-        name: 'Yogurt de mora',
-        price: 3750,
-        quantity: 25
-    }]
+    const [products, setProducts] = useState([])
 
     const handleLoginButtonClick = () => {
         setShowLoginForm(!showLoginForm);
@@ -59,6 +18,18 @@ function Home() {
         console.log(`Loguearse con ${email} y ${password}`)
     }
 
+    useEffect(()=>{
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+            mode:'no-cors'
+          };
+          
+          fetch("https://e-commerce-server-cs4f.onrender.com/getProducts", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    },[])
     return (
         <div className="container-fluid">
             <div className="row">
@@ -96,7 +67,6 @@ function Home() {
                         {products.map((product) => (
                             <div key={product.id} className="col">
                                 <div className="card">
-                                    {/* Puedes mostrar la imagen del producto aquí */}
                                     {product.img !== null ? <img src={product.img} className="card-img-top img-fluid" style={{height: '200px',objectFit: 'contain'}} alt={product.img}/> : null}
                                     <div className="card-body">
                                         <h5 className="card-title">{product.name}</h5>
@@ -131,7 +101,7 @@ function Home() {
                         <input type="password" className="form-control" id="exampleInputPassword1" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <button type="submit" className="btn btn-primary">Iniciar sesión</button>
-                    <div className="form-text"><a href='/signup'>¿No tienes una cuenta? registrate</a></div>
+                    <div className="form-text"><Link to='/signup'>¿No tienes una cuenta? registrate</Link></div>
                 </form>
             </div> : null
                 }

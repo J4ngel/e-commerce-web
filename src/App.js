@@ -1,16 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
-import Signup from './components/Auth/Signup';
+import { HashRouter, Route, Routes } from 'react-router-dom';
+import Home from './components/Pages/Home';
+import Signup from './components/Pages/Signup';
+import NotFound from './components/Pages/NotFound';
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path='*' element={<NotFound/>} />
       </Routes>
-    </Router>
+    </HashRouter>
   );
 }
 
