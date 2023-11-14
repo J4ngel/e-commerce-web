@@ -1,8 +1,8 @@
 import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import Home from './components/Pages/Home';
-import Signup from './components/Pages/Signup';
-import NotFound from './components/Pages/NotFound';
+import Home from './Pages/Home';
+import Signup from './Pages/Signup';
+import NotFound from './Pages/NotFound';
 
 function App() {
   return (
