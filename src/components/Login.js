@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import LoginFrom from "./LoginFrom"
 import UserAuth from "./UserAuth"
 
-const Login = ({ showLoginForm, userLoged, setUserLoged }) => {
+const Login = ({ showLoginForm, userLoged, setUserLoged, consultProducts }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState({ state: false, info: null, err: null })
@@ -40,7 +40,7 @@ const Login = ({ showLoginForm, userLoged, setUserLoged }) => {
                 zIndex: 1000
             }}>
                 {userLoged !== null ?
-                    <UserAuth userLoged={userLoged} setUserLoged={setUserLoged} loading={loading} setLoading={setLoading}/>
+                    <UserAuth userLoged={userLoged} setUserLoged={setUserLoged} loading={loading} setLoading={setLoading} consultProducts={consultProducts}/>
                     : <LoginFrom handleLogin={handleLogin} email={email} password={password} loading={loading} setEmail={setEmail} setPassword={setPassword} />}
             </div> : null
 
