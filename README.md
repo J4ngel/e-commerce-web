@@ -1,6 +1,6 @@
 # e-commerce-web
 ## Link to page:
-[https://j4ngel.github.io/e-commerce-web/]()
+[https://j4ngel.github.io/e-commerce-web/](https://j4ngel.github.io/e-commerce-web/)
 
 ## Getting Started with Create React App
 
