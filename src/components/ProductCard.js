@@ -9,7 +9,36 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
     const [newDescription, setNewDescription] = useState(product.description)
     const [newPrice, setNewPrice] = useState(product.price)
     const [newImage, setNewImage] = useState(product.img)
+    const [newQuantity, setNewQuantity] = useState(product.quantity)
 
+    const updateProduct = () => {
+        console.log("Actualizando producto...")
+        setLoading({ ...loading, state: true })
+
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer upd4t3_pr0d");
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+        };
+        if (product.name === newName && product.description === newDescription && product.price === newPrice && product.img === newImage && product.quantity === newQuantity) {
+            setLoading({ ...loading, state: false, info: null, err: 'Para actualizar el producto es necesario modificar algún campo' })
+        } else {
+            fetch(`https://e-commerce-server-cs4f.onrender.com/updateProduct?id=${product.id}&price=${newPrice}&name=${newName}&quantity=${newQuantity}&description=${newDescription}&img=${newImage}`, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok === true) {
+                        setLoading({ ...loading, state: false, info: 'ok', err: null })
+                        consultProducts()
+                        toggleModificar()
+                    } else {
+                        setLoading({ ...loading, state: false, info: null, err: result.msg })
+                    }
+                })
+                .catch(error => console.log('error', error));
+        }
+    }
 
     const deleteProduct = () => {
         console.log("Eliminando producto...")
@@ -35,7 +64,6 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
                 }
             })
             .catch(error => console.log('error', error));
-        //toggleEliminar()
     }
 
     const toggleEliminar = () => {
@@ -43,18 +71,12 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
         setEliminar(!eliminar)
     }
     const toggleModificar = () => {
-        if (newName === '') {
-            setNewName(product.name)
-        }
-        if (newDescription === '') {
-            setNewDescription(product.description)
-        }
-        if (newPrice === '') {
-            setNewPrice(product.price)
-        }
-        if (newImage === '') {
-            setNewImage(product.img)
-        }
+        setLoading({ state: false, info: null, err: null })
+        setNewName(product.name)
+        setNewDescription(product.description)
+        setNewPrice(product.price)
+        setNewImage(product.img)
+        setNewQuantity(product.quantity)
         setModificar(!modificar)
     }
 
@@ -63,8 +85,11 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
             {product.img !== null ? <img src={product.img} className="card-img-top img-fluid" style={{ height: '200px', objectFit: 'contain' }} alt={product.img} /> : null}
             <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">{product.description}</p>
+                <p className="card-text mb-0">{product.description}</p>
+                <div className="d-flex justify-content-between">
                 <p className="card-text">Precio: ${product.price}</p>
+                <p className="card-text">Stock: {product.quantity}</p>
+                </div>
                 <div className='d-flex justify-content-between'>
                     <button className="btn btn-primary">Agregar al carrito</button>
                     {userLoged !== null && userLoged.rol === 'admin' ?
@@ -118,6 +143,16 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
 
             <Modal isOpen={modificar} toggle={toggleModificar} >
                 <ModalBody>
+                    {loading.state === false ?
+                        loading.info === 'ok' ?
+                            <div className="alert alert-success" role="alert">
+                                Producto actualizado con éxito
+                            </div> :
+                            loading.err !== null ?
+                                <div class="alert alert-danger" role="alert">
+                                    {`Error: ${loading.err}`}
+                                </div> : null : null
+                    }
                     <h4>¿Desea editar el siguiente producto?</h4>
                     <div className="card mb-2">
                         <img src={newImage} className="card-img-top img-fluid" style={{ height: '200px', objectFit: 'contain' }} alt={newImage} />
@@ -138,15 +173,28 @@ const ProductCard = ({ product, userLoged, consultProducts }) => {
                                 <span className="input-group-text" id="inputGroup-sizing-sm">Precio</span>
                                 <input onChange={(e) => setNewPrice(e.target.value)} value={newPrice} type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
                             </div>
+                            <div className="input-group input-group-sm mb-3">
+                                <span className="input-group-text" id="inputGroup-sizing-sm">Cantidad</span>
+                                <input onChange={(e) => setNewQuantity(e.target.value)} value={newQuantity} type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                            </div>
                         </div>
                     </div>
                     <div className="d-flex justify-content-end">
-                        <Button className="me-2" color="primary" onClick={toggleModificar}>
-                            Actualizar
-                        </Button>
-                        <Button color="secondary" onClick={toggleModificar}>
-                            Cancel
-                        </Button>
+                        {loading.state === false ?
+                            <>
+                                <Button className="me-2" color="primary" onClick={updateProduct}>
+                                    Actualizar
+                                </Button>
+                                <Button color="secondary" onClick={toggleModificar}>
+                                    Cerrar
+                                </Button>
+                            </> :
+                            <button className="btn btn-primary" type="button" disabled>
+                                <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                <span role="status">Actualizando producto...</span>
+                            </button>
+
+                        }
                     </div>
                 </ModalBody>
             </Modal>
